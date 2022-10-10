@@ -1,0 +1,66 @@
+# nested_list = [
+# 	['a', 'b', 'c'],
+# 	['d', 'e', 'f', 'h', False],
+# 	[1, 2, None]]
+#
+# iter()
+#
+#
+# class FlatIterator:
+# 	def __init__(self, nested_list):
+# 		self.nested_list = nested_list
+# 		self.len = len(nested_list)
+# 		self.new_list = []
+#
+# 	def __iter__(self):
+# 		return self
+#
+# 	def __next__(self):
+#
+# 		for i in nested_list:
+# 			for j in i:
+# 				self.new_list.append(j)
+# 		print(self.new_list)
+# 		raise StopIteration
+# 		return self.new_list
+
+#
+#
+#
+# for item in FlatIterator(nested_list):
+# 	print(item)
+
+
+nested_list = [
+    ['a', 'b', 'c'],
+    ['d', 'e', 'f', 'h', False],
+    [1, 2, None],
+]
+
+
+class FlatIterator:
+    def __init__(self, lst):
+        self.lst = lst
+        self.cursor = -1
+        self.nest_cursor = 0
+        self.list_len = len(self.lst)
+
+    def __iter__(self):
+        self.cursor += 1
+        self.nest_cursor = 0
+        return self
+
+    def __next__(self):
+        while self.cursor - self.list_len and self.nest_cursor == len(self.lst[self.cursor]):
+            iter(self)
+        if self.cursor == self.list_len:
+            raise StopIteration
+        self.nest_cursor += 1
+        return self.lst[self.cursor][self.nest_cursor - 1]
+
+
+if __name__ == '__main__':
+    flat_list = [item for item in FlatIterator(nested_list)]
+    print(flat_list)
+    for i in flat_list:
+        print(i)
